@@ -58,6 +58,12 @@
         margin-bottom: 1rem;
     }
 
+    .zone-filter-container {
+        display: flex;
+        gap: 1rem;
+        margin: 1rem;
+    }
+
     .pokemons-main-container {
         display: flex;
         flex-direction: row;
@@ -178,7 +184,8 @@
 
     .zone-img-filter {
         width: 3rem;
-        border-radius: 0.4rem;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
     }
 
 
@@ -210,8 +217,26 @@
         cursor: pointer;
     }
 
+    .has-definitive-home-container {
+        font-weight: 800;
+        margin-top: 1rem;
+        background-color: #161218;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .has-definitive-home-container:hover {
+        background-color: #433749;
+        cursor: pointer;
+    }
+
     .selected-filter {
         background-color: #5d4f64;
+    }
+
+    .gold-background {
+        background: radial-gradient(ellipse farthest-corner at right bottom, #FEDB37 0%, #FDB931 8%, #9f7928 30%, #8A6E2F 40%, transparent 80%),
+            radial-gradient(ellipse farthest-corner at left top, #FFFFFF 0%, #FFFFAC 8%, #D1B464 25%, #5d4a1f 62.5%, #5d4a1f 100%);
     }
 </style>
 
@@ -222,7 +247,7 @@
         <div class="zone-filter-container" id="zone-filter-container">
         </div>
         <img src="assets/Specialities/chop.png" alt="display speciality" class="speciality-display-button"
-            onclick="onclickDisplaySpeciality()">
+            title="hide/show specialities" onclick="onclickDisplaySpeciality()">
     </div>
     <div class="pokemons-main-container" id="pokemons-main-container">
     </div>
@@ -231,6 +256,7 @@
             <img src="assets/icons/cross.svg" alt="quit cross" class="cross-close-popup" onclick="closePopup()">
             <div id="pokemon-name-popup" class="pokemon-name-popup"></div>
             <div id="is-friend-container" class="is-friend-container"></div>
+            <div id="has-definitive-home-container" class="has-definitive-home-container"></div>
             <div id="zone-choice-container" class="zone-choice-container">
             </div>
         </div>
@@ -249,6 +275,7 @@
             localPokemons = pokemons;
             localPokemons.forEach(pokemon => {
                 pokemon.isFriend = false;
+                pokemon.hasDefinitiveHome = false;
                 pokemon.zone = 0;
             });
             localStorage.setItem("pokemons", JSON.stringify(localPokemons));
@@ -283,6 +310,7 @@
                 singleZone.src = "assets/Zones/" + zone.img;
                 singleZone.alt = zone.name;
                 singleZone.zoneid = zone.id;
+                singleZone.title = "Pokémons in " + zone.name
                 singleZone.classList.add("zone-img-filter");
                 singleZone.onclick = function () {
                     let zonesFilterDiv = document.getElementsByClassName("zone-img-filter");
@@ -339,6 +367,10 @@
             pokemonDiv.style.display = "none";
         else
             pokemonDiv.style.display = "flex";
+
+        pokemonDiv.classList.remove("gold-background");
+        if (pokemon.hasDefinitiveHome)
+            pokemonDiv.classList.add("gold-background");
     }
 
     function updateAllPokemons() {
@@ -373,6 +405,18 @@
                     popupContainer.style.display = "flex";
                     let pokeName = document.getElementById("pokemon-name-popup");
                     pokeName.innerHTML = pokemon.name;
+                    let pokeHasDefinitiveHome = document.getElementById("has-definitive-home-container");
+                    pokeHasDefinitiveHome.innerHTML = (pokemon.hasDefinitiveHome ? pokemon.name + " has their definitive home" : pokemon.name + " does not have their definitive home");
+                    pokeHasDefinitiveHome.style.color = (pokemon.hasDefinitiveHome ? "gold" : "white");
+                    pokeHasDefinitiveHome.onclick = function () {
+                        pokemon.hasDefinitiveHome = !pokemon.hasDefinitiveHome;
+                        saveLocalStorage();
+                        pokeHasDefinitiveHome.innerHTML = (pokemon.hasDefinitiveHome ? pokemon.name + " has their definitive home" : pokemon.name + " does not have their definitive home");
+                        pokeHasDefinitiveHome.style.color = (pokemon.hasDefinitiveHome ? "gold" : "white");
+                        updatePokemon(pokemon);
+                        closePopup();
+                    }
+
                     let pokeIsFriend = document.getElementById("is-friend-container");
                     pokeIsFriend.innerHTML = (pokemon.isFriend ? pokemon.name + " is your friend" : pokemon.name + " is not your friend yet");
                     pokeIsFriend.style.color = (pokemon.isFriend ? "#73d373" : "#ff3f3f");
