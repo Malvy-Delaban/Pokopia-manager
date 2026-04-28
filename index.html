@@ -1,0 +1,450 @@
+<!DOCTYPE HTML>
+<html>
+<link rel="icon" type="image/x-icon" href="/assets/icons/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Elms+Sans:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+<title>Pokopia Residents Manager</title>
+
+
+<script src="pokemon_dataset.js"></script>
+<script src="zones_dataset.js"></script>
+
+<style type="text/css">
+    html,
+    body {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: "Elms Sans", sans-serif;
+        background-color: #161218;
+    }
+
+    .main-top-container {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .speciality-display-button {
+        position: fixed;
+        background-color: #161218;
+        border-radius: 1rem;
+        top: 1rem;
+        right: 1rem;
+        width: 3rem;
+        padding: 0.8rem;
+        z-index: 2;
+    }
+
+    .speciality-display-button:hover {
+        cursor: pointer;
+        background-color: #453a4b;
+    }
+
+    .title {
+        color: rgb(231, 231, 231);
+        margin: 0rem;
+        margin-top: 1rem;
+    }
+
+    #portfolio {
+        color: white;
+        text-decoration: none;
+        text-align: center;
+        margin-bottom: 1rem;
+    }
+
+    .pokemons-main-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+    }
+
+    .pokemon-container {
+        position: relative;
+        background-color: #ffffff20;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: white;
+        font-weight: 800;
+        text-wrap: wrap;
+        text-align: center;
+        width: 10rem;
+        height: 14rem;
+        border: solid 2px transparent;
+    }
+
+    .zone-indicator {
+        position: absolute;
+        bottom: 0rem;
+        right: 0rem;
+        width: 2rem;
+    }
+
+    .pokemon-container:hover {
+        cursor: pointer;
+        border: solid 2px white;
+    }
+
+    .not-friend {
+        filter: brightness(0.3);
+    }
+
+    .pokemon-container-img {
+        width: 8rem;
+    }
+
+    p {
+        margin: 0;
+        padding: 0;
+    }
+
+    .specialities-list {
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+        justify-content: center;
+        margin-top: 0.5rem;
+    }
+
+    .speciality-img {
+        width: 1.6rem;
+        display: none;
+    }
+
+    .popup-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 100%;
+        height: 100%;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .popup-setting-pokemon {
+        position: relative;
+        background-color: #2f2833;
+        padding: 2rem;
+        border-radius: 1.5rem;
+        color: white;
+        font-weight: 800;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .pokemon-name-popup {
+        color: white;
+        font-weight: 800;
+    }
+
+    .cross-close-popup {
+        position: absolute;
+        width: 2rem;
+        height: 2rem;
+        top: 1rem;
+        right: 1rem;
+    }
+
+    .cross-close-popup:hover {
+        cursor: pointer;
+    }
+
+    .zone-choice-container {
+        margin-top: 1rem;
+    }
+
+
+    .zone-img {
+        width: 3rem;
+        border: solid 3px transparent;
+        border-radius: 0.4rem;
+    }
+
+    .zone-img-filter {
+        width: 3rem;
+        border-radius: 0.4rem;
+    }
+
+
+    .zone-img-filter:hover {
+        background-color: #433749;
+        cursor: pointer;
+    }
+
+    .not-chosen-img {
+        filter: brightness(0.3);
+    }
+
+    .zone-img:hover {
+        border: solid 3px rgb(255, 255, 255);
+        cursor: pointer;
+        filter: brightness(0.6);
+    }
+
+    .is-friend-container {
+        font-weight: 800;
+        margin-top: 1rem;
+        background-color: #161218;
+        border-radius: 0.5rem;
+        padding: 0.5rem;
+    }
+
+    .is-friend-container:hover {
+        background-color: #433749;
+        cursor: pointer;
+    }
+
+    .selected-filter {
+        background-color: #5d4f64;
+    }
+</style>
+
+<body>
+    <div class="main-top-container">
+        <h1 class="title">Pokopia Residents Manager</h1>
+        <a id="portfolio" href="https://malvy-delaban.fr/">Made by Malvy DELABAN</a>
+        <div class="zone-filter-container" id="zone-filter-container">
+        </div>
+        <img src="assets/Specialities/chop.png" alt="display speciality" class="speciality-display-button"
+            onclick="onclickDisplaySpeciality()">
+    </div>
+    <div class="pokemons-main-container" id="pokemons-main-container">
+    </div>
+    <div id="pokemon-setting-popup" class="popup-container">
+        <div class="popup-setting-pokemon">
+            <img src="assets/icons/cross.svg" alt="quit cross" class="cross-close-popup" onclick="closePopup()">
+            <div id="pokemon-name-popup" class="pokemon-name-popup"></div>
+            <div id="is-friend-container" class="is-friend-container"></div>
+            <div id="zone-choice-container" class="zone-choice-container">
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    let localPokemons = null;
+    let displaySpeciality = false;
+    let currentFilterZone = -1;
+
+    function storeAndRetrieveData() {
+        localPokemons = localStorage.getItem("pokemons");
+
+        if (!localPokemons) {
+            localPokemons = pokemons;
+            localPokemons.forEach(pokemon => {
+                pokemon.isFriend = false;
+                pokemon.zone = 0;
+            });
+            localStorage.setItem("pokemons", JSON.stringify(localPokemons));
+        } else {
+            localPokemons = JSON.parse(localPokemons);
+        }
+    }
+
+    function saveLocalStorage() {
+        localStorage.setItem("pokemons", JSON.stringify(localPokemons));
+    }
+
+    function createPopupZones() {
+        let parent = document.getElementById("zone-choice-container")
+        zones.forEach(zone => {
+            if (zone.isUsable) {
+                let singleZone = document.createElement("img");
+                singleZone.src = "assets/Zones/" + zone.img;
+                singleZone.alt = zone.name;
+                singleZone.zoneid = zone.id;
+                singleZone.classList.add("zone-img-filter");
+                parent.appendChild(singleZone);
+            }
+        });
+    }
+
+    function createFilterZones() {
+        let parent = document.getElementById("zone-filter-container")
+        zones.forEach(zone => {
+            if (zone.isUsable) {
+                let singleZone = document.createElement("img");
+                singleZone.src = "assets/Zones/" + zone.img;
+                singleZone.alt = zone.name;
+                singleZone.zoneid = zone.id;
+                singleZone.classList.add("zone-img-filter");
+                singleZone.onclick = function () {
+                    let zonesFilterDiv = document.getElementsByClassName("zone-img-filter");
+                    Array.from(zonesFilterDiv).forEach(element => {
+                        element.classList.remove("selected-filter");
+                    });
+
+                    if (currentFilterZone == zone.id)
+                        currentFilterZone = -1;
+                    else {
+                        currentFilterZone = zone.id;
+                        singleZone.classList.add("selected-filter");
+                    }
+
+                    updateAllPokemons();
+                }
+                parent.appendChild(singleZone);
+            }
+        });
+    }
+
+    function closePopup() {
+        let popupContainer = document.getElementById("pokemon-setting-popup");
+        popupContainer.style.display = "none";
+    }
+
+    function updateZonesImg(pokemon) {
+        let zonesDiv = document.getElementById("zone-choice-container");
+        let allZones = zonesDiv.getElementsByTagName('img');
+
+        for (i = 0; i < allZones.length; i++) {
+            allZones[i].classList.remove("not-chosen-img");
+            if (allZones[i].zoneid != pokemon.zone)
+                allZones[i].classList.add("not-chosen-img");
+        }
+    }
+
+    function updatePokemon(pokemon) {
+        let pokemonDiv = document.getElementById(pokemon.id);
+        if (pokemon.id == "041")
+            console.log(pokemon.zone + " " + currentFilterZone);
+
+        pokemonDiv.classList.remove("not-friend");
+        if (!pokemon.isFriend)
+            pokemonDiv.classList.add("not-friend");
+
+        pokemonDiv.childNodes[0].src = "assets/Zones/" + zones[pokemon.zone].img;
+        if (!zones[pokemon.zone].img || !pokemon.isFriend)
+            pokemonDiv.childNodes[0].style.display = "none";
+        else
+            pokemonDiv.childNodes[0].style.display = "flex";
+
+        if (pokemon.zone != currentFilterZone && currentFilterZone != -1)
+            pokemonDiv.style.display = "none";
+        else
+            pokemonDiv.style.display = "flex";
+    }
+
+    function updateAllPokemons() {
+        localPokemons.forEach(pokemon => {
+            updatePokemon(pokemon);
+        });
+    }
+
+    function onclickDisplaySpeciality() {
+        displaySpeciality = !displaySpeciality;
+        let specialitiesDiv = document.getElementsByClassName("speciality-img");
+
+        Array.from(specialitiesDiv).forEach(element => {
+            element.style.display = (displaySpeciality ? "flex" : "none");
+        });
+    }
+
+    function createPokemonDivs() {
+        let popupContainer = document.getElementById("pokemon-setting-popup");
+        popupContainer.style.display = "none";
+        let containerDiv = document.getElementById("pokemons-main-container");
+
+        localPokemons.forEach((pokemon, arrayIndex) => {
+            if (pokemon.id) {
+                let singleDiv = document.createElement("div");
+                singleDiv.id = pokemon.id;
+                singleDiv.classList.add("pokemon-container");
+                if (!pokemon.isFriend)
+                    singleDiv.classList.add("not-friend");
+
+                singleDiv.onclick = function () {
+                    popupContainer.style.display = "flex";
+                    let pokeName = document.getElementById("pokemon-name-popup");
+                    pokeName.innerHTML = pokemon.name;
+                    let pokeIsFriend = document.getElementById("is-friend-container");
+                    pokeIsFriend.innerHTML = (pokemon.isFriend ? pokemon.name + " is your friend" : pokemon.name + " is not your friend yet");
+                    pokeIsFriend.style.color = (pokemon.isFriend ? "#73d373" : "#ff3f3f");
+                    pokeIsFriend.onclick = function () {
+                        pokemon.isFriend = !pokemon.isFriend;
+                        saveLocalStorage();
+                        pokeIsFriend.innerHTML = (pokemon.isFriend ? pokemon.name + " is your friend" : pokemon.name + " is not your friend yet");
+                        pokeIsFriend.style.color = (pokemon.isFriend ? "#73d373" : "#ff3f3f");
+                        updatePokemon(pokemon);
+                        closePopup();
+                    }
+                    let zonesDiv = document.getElementById("zone-choice-container");
+                    let allZones = zonesDiv.getElementsByTagName('img');
+
+                    console.log(pokemon);
+                    for (i = 0; i < allZones.length; i++) {
+                        if (allZones[i].zoneid != pokemon.zone)
+                            allZones[i].classList.add("not-chosen-img");
+                        allZones[i].onclick = function () {
+                            pokemon.zone = this.zoneid;
+                            saveLocalStorage();
+                            updateZonesImg(pokemon);
+                            updatePokemon(pokemon);
+                            closePopup();
+                        }
+                    }
+                };
+
+                let zoneIndicator = document.createElement("img");
+                zoneIndicator.classList.add("zone-indicator");
+                zoneIndicator.src = "assets/Zones/" + zones[pokemon.zone].img;
+                if (!zones[pokemon.zone].img)
+                    zoneIndicator.style.display = "none";
+
+                let text = document.createElement("p");
+                text.innerHTML = pokemon.name;
+
+                let img = document.createElement("img");
+                img.classList.add("pokemon-container-img");
+                img.src = "assets/pokemons/" + pokemon.image;
+
+                let specialities = document.createElement("div");
+                specialities.classList.add("specialities-list");
+
+                pokemon.specialities.forEach(speciality => {
+                    let divSpeciality = document.createElement("div");
+                    divSpeciality.title = speciality;
+                    divSpeciality.classList.add("speciality-container");
+
+                    let imgName = speciality.replace(/\s/g, "").toLowerCase();
+                    let imgSpeciality = document.createElement("img");
+                    imgSpeciality.classList.add("speciality-img");
+                    imgSpeciality.src = "assets/Specialities/" + imgName + ".png";
+
+                    divSpeciality.appendChild(imgSpeciality);
+                    specialities.appendChild(divSpeciality);
+                });
+
+                singleDiv.appendChild(zoneIndicator);
+                singleDiv.appendChild(text);
+                singleDiv.appendChild(img);
+                singleDiv.appendChild(specialities);
+                containerDiv.appendChild(singleDiv);
+            }
+        });
+    }
+
+    storeAndRetrieveData();
+    createPopupZones();
+    createFilterZones();
+    createPokemonDivs();
+    updateAllPokemons();
+</script>
+
+</html>
