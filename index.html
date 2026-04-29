@@ -18,7 +18,56 @@
         margin: 0;
         padding: 0;
         font-family: "Elms Sans", sans-serif;
+    }
+
+    body {
         background-color: #161218;
+    }
+
+    .bottom-page-warning-mode-container {
+        width: 100%;
+        position: fixed;
+        bottom: 1rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .quit-mode-button:hover {
+        cursor: pointer;
+        filter: brightness(1.5);
+    }
+
+    #mode-explanation {
+        color: gold;
+    }
+
+    .bottom-page-warning-mode {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #bf2121;
+        border-radius: 5rem;
+        padding: 0.5rem 1.5rem;
+        border: solid 0.4rem #fd5353;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: white;
+        text-align: center;
+    }
+
+    .add-friend-background {
+        background-color: #21090d;
+    }
+
+    .has-home-background {
+        background-color: #272513;
+    }
+
+    .change-zone-background {
+        background-color: #10210d;
     }
 
     .main-top-container {
@@ -29,10 +78,37 @@
         align-items: center;
     }
 
+    .switch-mode-container {
+        position: absolute;
+        top: 1rem;
+        left: 1rem;
+        display: flex;
+        flex-direction: row;
+        margin: 1rem;
+        color: #cdb6d3;
+        font-weight: 500;
+        font-size: 1rem;
+        align-items: center;
+        justify-content: center;
+        background-color: #4b3e51;
+        border-radius: 5rem;
+        padding: 0.2rem 0.8rem;
+        border: solid 3px #7c6781;
+        gap: 1rem;
+    }
+
+    .switch-mode-container:hover {
+        cursor: pointer;
+    }
+
+    .switch-mode-icon {
+        width: 2rem;
+    }
+
     .speciality-display-button {
         position: fixed;
         background-color: #161218;
-        border-radius: 1rem;
+        border-radius: 5rem;
         top: 1rem;
         right: 1rem;
         width: 3rem;
@@ -62,8 +138,8 @@
         display: flex;
         gap: 1rem;
         margin: 1rem;
-        color: white;
-        font-weight: 500;
+        color: #cdb6d3;
+        font-weight: 800;
         font-size: 1.2rem;
         align-items: center;
         justify-content: center;
@@ -249,7 +325,7 @@
     }
 </style>
 
-<body>
+<body id="body-tag">
     <div class="main-top-container">
         <h1 class="title">Pokopia Residents Manager</h1>
         <a id="portfolio" href="https://malvy-delaban.fr/">Made by Malvy DELABAN</a>
@@ -258,6 +334,38 @@
         </div>
         <img src="assets/Specialities/chop.png" alt="display speciality" class="speciality-display-button"
             title="hide/show specialities" onclick="onclickDisplaySpeciality()">
+        <div class="switch-mode-container" id="0-mode" onclick="changeMode(1)">
+            <img src="assets/icons/heart.svg" alt="friend mode icon" class="switch-mode-icon">
+            <p>Switch to "Add friend" mode</p>
+        </div>
+        <div class="switch-mode-container" id="1-mode" onclick="changeMode(2)">
+            <img src="assets/icons/home.svg" alt="has home mode icon" class="switch-mode-icon">
+            <p>Switch to "Has definitive home" mode</p>
+        </div>
+        <div class="switch-mode-container" id="2-mode" onclick="changeMode(3)">
+            <img src="assets/Zones/withered-wasteland.png" alt="Withered Wasteland icon" class="switch-mode-icon">
+            <p>Switch to Withered Wasteland mode</p>
+        </div>
+        <div class="switch-mode-container" id="3-mode" onclick="changeMode(4)">
+            <img src="assets/Zones/bleak-beach.png" alt="Bleak Beach icon" class="switch-mode-icon">
+            <p>Switch to Bleak Beach mode</p>
+        </div>
+        <div class="switch-mode-container" id="4-mode" onclick="changeMode(5)">
+            <img src="assets/Zones/rocky-ridges.png" alt="Rocky Ridges icon" class="switch-mode-icon">
+            <p>Switch to Rocky Ridges mode</p>
+        </div>
+        <div class="switch-mode-container" id="5-mode" onclick="changeMode(6)">
+            <img src="assets/Zones/sparkling-skylands.png" alt="Sparkling Skylands icon" class="switch-mode-icon">
+            <p>Switch to Sparkling Skylands mode</p>
+        </div>
+        <div class="switch-mode-container" id="6-mode" onclick="changeMode(7)">
+            <img src="assets/Zones/palette-town.png" alt="Palette Town icon" class="switch-mode-icon">
+            <p>Switch to Palette Town mode</p>
+        </div>
+        <div class="switch-mode-container" id="7-mode" onclick="changeMode(0)">
+            <img src="assets/icons/cross.svg" alt="default selection mode icon" class="switch-mode-icon">
+            <p>Switch to Default selection</p>
+        </div>
     </div>
     <div class="pokemons-main-container" id="pokemons-main-container">
     </div>
@@ -272,12 +380,56 @@
             </div>
         </div>
     </div>
+    <div class="bottom-page-warning-mode-container" id="bottom-page-warning-mode-container">
+        <div class="bottom-page-warning-mode">
+            Be careful, while in this mode, a click on a pokemon will &#8202;<span id="mode-explanation"></span>
+        </div>
+        <div class="bottom-page-warning-mode quit-mode-button" onclick="changeMode(0)">
+            Click here to return to default selection mode
+        </div>
+    </div>
 </body>
 
 <script>
     let localPokemons = null;
     let displaySpeciality = false;
+    let currentMode = 0;
     let currentFilterZone = -1;
+    const warningText = [
+        "open a popup to handle pokemon's settings",
+        "friend or unfriend them",
+        "change their definitive home status",
+        "make their area the Withered Wasteland",
+        "make their area the Bleak Beach",
+        "make their area the Rocky Ridges",
+        "make their area the Sparkling Skylands",
+        "make their area the Palette Town",
+    ]
+
+    function changeMode(newMode) {
+        let modeSwitchButtons = document.getElementsByClassName("switch-mode-container");
+        Array.from(modeSwitchButtons).forEach(element => {
+            element.style.display = "none";
+        });
+        currentMode = newMode;
+        let currentModeDiv = document.getElementById(currentMode + "-mode");
+        currentModeDiv.style.display = "flex";
+        let htmlTag = document.getElementById("body-tag");
+        htmlTag.classList.remove("add-friend-background");
+        htmlTag.classList.remove("has-home-background");
+        htmlTag.classList.remove("change-zone-background");
+        if (currentMode == 1)
+            htmlTag.classList.add("add-friend-background")
+        if (currentMode == 2)
+            htmlTag.classList.add("has-home-background")
+        if (currentMode >= 3 && currentMode <= 7)
+            htmlTag.classList.add("change-zone-background");
+
+        let warningDiv = document.getElementById("bottom-page-warning-mode-container");
+        warningDiv.style.display = currentMode == 0 ? "none" : "flex";
+        let warningContentSpan = document.getElementById("mode-explanation");
+        warningContentSpan.innerHTML = warningText[currentMode];
+    }
 
     function storeAndRetrieveData() {
         localPokemons = localStorage.getItem("pokemons");
@@ -413,6 +565,20 @@
                     singleDiv.classList.add("not-friend");
 
                 singleDiv.onclick = function () {
+                    if (currentMode == 1) {
+                        pokemon.isFriend = !pokemon.isFriend;
+                        updatePokemon(pokemon);
+                        return;
+                    } else if (currentMode == 2) {
+                        pokemon.hasDefinitiveHome = !pokemon.hasDefinitiveHome;
+                        updatePokemon(pokemon);
+                        return;
+                    } else if (currentMode >= 3 && currentMode <= 7) {
+                        pokemon.isFriend = true;
+                        pokemon.zone = currentMode - 2;
+                        updatePokemon(pokemon);
+                        return;
+                    }
                     popupContainer.style.display = "flex";
                     let pokeName = document.getElementById("pokemon-name-popup");
                     pokeName.innerHTML = pokemon.name;
@@ -494,6 +660,7 @@
         });
     }
 
+    changeMode(0);
     storeAndRetrieveData();
     createPopupZones();
     createFilterZones();
