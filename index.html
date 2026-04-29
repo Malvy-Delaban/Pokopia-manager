@@ -62,6 +62,15 @@
         display: flex;
         gap: 1rem;
         margin: 1rem;
+        color: white;
+        font-weight: 500;
+        font-size: 1.2rem;
+        align-items: center;
+        justify-content: center;
+        background-color: #4b3e51;
+        border-radius: 5rem;
+        padding: 0.3rem 2rem;
+        border: solid 5px #7c6781;
     }
 
     .pokemons-main-container {
@@ -184,7 +193,7 @@
 
     .zone-img-filter {
         width: 3rem;
-        border-radius: 0.5rem;
+        border-radius: 3rem;
         padding: 0.5rem;
     }
 
@@ -231,7 +240,7 @@
     }
 
     .selected-filter {
-        background-color: #5d4f64;
+        background-color: #7c6781;
     }
 
     .gold-background {
@@ -245,6 +254,7 @@
         <h1 class="title">Pokopia Residents Manager</h1>
         <a id="portfolio" href="https://malvy-delaban.fr/">Made by Malvy DELABAN</a>
         <div class="zone-filter-container" id="zone-filter-container">
+            <p>Filter by area</p>
         </div>
         <img src="assets/Specialities/chop.png" alt="display speciality" class="speciality-display-button"
             title="hide/show specialities" onclick="onclickDisplaySpeciality()">
@@ -255,6 +265,7 @@
         <div class="popup-setting-pokemon">
             <img src="assets/icons/cross.svg" alt="quit cross" class="cross-close-popup" onclick="closePopup()">
             <div id="pokemon-name-popup" class="pokemon-name-popup"></div>
+            <img id="pokemon-img-popup" class="pokemon-img-popup">
             <div id="is-friend-container" class="is-friend-container"></div>
             <div id="has-definitive-home-container" class="has-definitive-home-container"></div>
             <div id="zone-choice-container" class="zone-choice-container">
@@ -405,6 +416,8 @@
                     popupContainer.style.display = "flex";
                     let pokeName = document.getElementById("pokemon-name-popup");
                     pokeName.innerHTML = pokemon.name;
+                    let pokeImg = document.getElementById("pokemon-img-popup");
+                    pokeImg.src = "assets/Pokemons/" + pokemon.image;
                     let pokeHasDefinitiveHome = document.getElementById("has-definitive-home-container");
                     pokeHasDefinitiveHome.innerHTML = (pokemon.hasDefinitiveHome ? pokemon.name + " has their definitive home" : pokemon.name + " does not have their definitive home");
                     pokeHasDefinitiveHome.style.color = (pokemon.hasDefinitiveHome ? "gold" : "white");
@@ -414,7 +427,6 @@
                         pokeHasDefinitiveHome.innerHTML = (pokemon.hasDefinitiveHome ? pokemon.name + " has their definitive home" : pokemon.name + " does not have their definitive home");
                         pokeHasDefinitiveHome.style.color = (pokemon.hasDefinitiveHome ? "gold" : "white");
                         updatePokemon(pokemon);
-                        closePopup();
                     }
 
                     let pokeIsFriend = document.getElementById("is-friend-container");
@@ -426,7 +438,6 @@
                         pokeIsFriend.innerHTML = (pokemon.isFriend ? pokemon.name + " is your friend" : pokemon.name + " is not your friend yet");
                         pokeIsFriend.style.color = (pokemon.isFriend ? "#73d373" : "#ff3f3f");
                         updatePokemon(pokemon);
-                        closePopup();
                     }
                     let zonesDiv = document.getElementById("zone-choice-container");
                     let allZones = zonesDiv.getElementsByTagName('img');
@@ -440,7 +451,6 @@
                             saveLocalStorage();
                             updateZonesImg(pokemon);
                             updatePokemon(pokemon);
-                            closePopup();
                         }
                     }
                 };
