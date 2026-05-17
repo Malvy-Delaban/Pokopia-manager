@@ -3,7 +3,8 @@
 
 <meta property="og:title" content="Pokopia Residents Manager" />
 <meta property="og:type" content="website">
-<meta property="og:description" content="A simple tool to manage your pokopia residents and track wich one has its own house.">
+<meta property="og:description"
+    content="A simple tool to manage your pokopia residents and track wich one has its own house.">
 <meta property="og:image" content="https://i.ibb.co/zHbQstdy/preview.png">
 <meta property="og:image:type" content="image/png">
 <meta name="twitter:card" content="summary_large_image">
@@ -195,6 +196,17 @@
         width: 10rem;
         height: 14rem;
         border: solid 2px transparent;
+    }
+
+    .spaceDiv {
+        position: relative;
+        width: 100%;
+        height: 5rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: rgb(192, 188, 163);
+        font-weight: 800;
     }
 
     .zone-indicator {
@@ -465,6 +477,30 @@
         warningContentSpan.innerHTML = warningText[currentMode];
     }
 
+    function checkUncompleteData(localPokemons) {
+        localPokemons.forEach(poke => {
+            if (!poke.isFriend)
+                poke.isFriend = false;
+            if (!poke.hasDefinitiveHome)
+                poke.hasDefinitiveHome = false;
+            if (!poke.zone)
+                poke.zone = 0;
+        });
+    }
+
+    function checkNewPokemons(alreadyTherePokemons) {
+        pokemons.forEach(pokemon => {
+            if (!alreadyTherePokemons.find((poke) => poke.id === pokemon.id)) {
+                alreadyTherePokemons.push(pokemon);
+                pokemon.isFriend = false;
+                pokemon.hasDefinitiveHome = false;
+                pokemon.zone = 0;
+            }
+        });
+
+        return (alreadyTherePokemons);
+    }
+
     function storeAndRetrieveData() {
         localPokemons = localStorage.getItem("pokemons");
 
@@ -478,6 +514,9 @@
             localStorage.setItem("pokemons", JSON.stringify(localPokemons));
         } else {
             localPokemons = JSON.parse(localPokemons);
+            localPokemons = checkNewPokemons(localPokemons);
+            checkUncompleteData(localPokemons);
+            localStorage.setItem("pokemons", JSON.stringify(localPokemons));
         }
     }
 
@@ -547,8 +586,6 @@
 
     function updatePokemon(pokemon) {
         let pokemonDiv = document.getElementById(pokemon.id);
-        if (pokemon.id == "041")
-            console.log(pokemon.zone + " " + currentFilterZone);
 
         pokemonDiv.classList.remove("not-friend");
         if (!pokemon.isFriend)
@@ -589,8 +626,17 @@
         let popupContainer = document.getElementById("pokemon-setting-popup");
         popupContainer.style.display = "none";
         let containerDiv = document.getElementById("pokemons-main-container");
+        let isEventPokeSeparatorCreated = false;
 
         localPokemons.forEach((pokemon, arrayIndex) => {
+            if (!isEventPokeSeparatorCreated && Array.from(pokemon.id)[0] == "_") {
+                let spaceDiv = document.createElement("div");
+                spaceDiv.id = "spaceDiv";
+                spaceDiv.classList.add("spaceDiv");
+                spaceDiv.innerHTML = "Events Pokémons"
+                containerDiv.appendChild(spaceDiv);
+                isEventPokeSeparatorCreated = true;
+            }
             if (pokemon.id) {
                 let singleDiv = document.createElement("div");
                 singleDiv.id = pokemon.id;
@@ -642,7 +688,6 @@
                     let zonesDiv = document.getElementById("zone-choice-container");
                     let allZones = zonesDiv.getElementsByTagName('img');
 
-                    console.log(pokemon);
                     for (i = 0; i < allZones.length; i++) {
                         if (allZones[i].zoneid != pokemon.zone)
                             allZones[i].classList.add("not-chosen-img");

@@ -2594,5 +2594,47 @@ let pokemons = [
             "Teleport"
         ],
         "image": "151.png"
+    },
+    {
+        "id": "300",
+        "name": "Mew",
+        "specialities": [
+            "Grow"
+        ],
+        "image": "151.png"
+    },
+    /* EVENT POKES */
+    {
+        "id": "_001",
+        "name": "Hoppip",
+        "specialities": [
+            "Grow"
+        ],
+        "image": "187.png"
+    },
+    {
+        "id": "_002",
+        "name": "Skiploom",
+        "specialities": [
+            "Grow"
+        ],
+        "image": "188.png"
+    },
+    {
+        "id": "_003",
+        "name": "Jumpluff",
+        "specialities": [
+            "Grow",
+            "Litter"
+        ],
+        "image": "189.png"
+    },
+    {
+        "id": "_004",
+        "name": "Sableye",
+        "specialities": [
+            "Search"
+        ],
+        "image": "302.png"
     }
 ]
